@@ -39,7 +39,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = (
             'url',
             'pk',
-            'usrname',
+            'username',
             'games'
         )
 
@@ -60,6 +60,7 @@ class GameCategorySerializer(serializers.HyperlinkedModelSerializer):
         )
 
 class GameSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
     game_category = serializers.SlugRelatedField(queryset=GameCategory.objects.all(),
     slug_field='name')
     
@@ -68,6 +69,7 @@ class GameSerializer(serializers.ModelSerializer):
         fields = (
             'url',
             'name',
+            'owner',
             'release_date',
             'game_category',
             'played',
