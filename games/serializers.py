@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from games.models import GameCategory, Game, Player, PlayerScore
+from django.contrib.auth.models import User
 
 # long way to serialize
 # class GameSerializer(serializers.Serializer):
@@ -22,6 +23,25 @@ from games.models import GameCategory, Game, Player, PlayerScore
 #         return instance
 
 # best way to serialize model
+
+class UserGameSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Game
+        fields = (
+            'url',
+            'name'
+        )
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    games = UserGameSerializer(many=True, read_only=True)
+    class Meta:
+        model = User
+        fields = (
+            'url',
+            'pk',
+            'usrname',
+            'games'
+        )
 
 class GameCategorySerializer(serializers.HyperlinkedModelSerializer):
     games = serializers.HyperlinkedRelatedField(
